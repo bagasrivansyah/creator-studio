@@ -43,6 +43,23 @@ export const ON_DEVICE_MODEL_LABEL = "Gemini Nano 4 (on-device)";
 const DEVICE_INIT_DONE = new WeakSet();
 
 /**
+ * Model instances are cached per (task, mode, cloud model, language).
+ * Model configuration lives for the lifetime of the instance (per the
+ * docs), and caching means `initializeDeviceModel()` runs once per model
+ * instead of before every generation.
+ */
+const MODEL_CACHE = new Map();
+
+function getCachedModel(cacheKey, buildFn) {
+  let model = MODEL_CACHE.get(cacheKey);
+  if (!model) {
+    model = buildFn();
+    MODEL_CACHE.set(cacheKey, model);
+  }
+  return model;
+}
+
+/**
  * Task definitions. `defaultMode` is the routing the app uses in "Auto":
  * small, private brainstorming goes to Nano first; long-form writing goes
  * straight to the cloud because it needs a larger model.
@@ -200,7 +217,10 @@ export async function runTask(task, brief, opts = {}) {
   let lastError = null;
   for (let attempt = 0; attempt < cloudModels.length; attempt++) {
     const cloudModel = cloudModels[attempt];
-    const model = buildModel(task, mode, cloudModel, language);
+    const model = getCachedModel(
+      `${task.id}|${mode}|${cloudModel}|${language}`,
+      () => buildModel(task, mode, cloudModel, language)
+    );
 
     // The on-device model must be initialized after a user gesture and
     // before the first prompt. Generation is always click-triggered, so
