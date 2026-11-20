@@ -179,13 +179,15 @@ Requirements: **Chrome 139+ on desktop**.
   cloud with real, on-topic content; the routing log shows `IN_CLOUD` with
   real latencies (avg ~1.7s per task, 8.3s for the full package); zero
   console errors and zero failed requests.
+- Firestore save/load verified against the live database (21 Nov 2026): a
+  project saved under anonymous Auth, survived a page reload, and loaded
+  back with its full content; the document exists in the `projects`
+  collection under the user's uid.
 
 ### Not verified (needs a real Firebase project + Chrome)
 
 - The on-device Gemini Nano path end-to-end (needs Chrome 139+ with the model
   downloaded — not available in this build environment).
-- Firestore save/load against a live database (rules are included and the
-  localStorage fallback is exercised in demo mode).
 
 ## License
 
