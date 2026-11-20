@@ -13,7 +13,6 @@ import {
   doc,
   getDocs,
   limit,
-  orderBy,
   query,
   serverTimestamp,
   where,
@@ -69,14 +68,24 @@ export async function listProjects(uid) {
   if (isConfigured && uid) {
     try {
       const db = getFirestoreDb();
+      // NOTE: no orderBy here — a where(uid) + orderBy(createdAt) query needs
+      // a composite index that may not exist in the project (Firestore
+      // returns FAILED_PRECONDITION "The query requires an index").
+      // Query by uid only (single-field, always indexed) and sort
+      // client-side instead.
       const q = query(
         collection(db, "projects"),
         where("uid", "==", uid),
-        orderBy("createdAt", "desc"),
         limit(20)
       );
       const snap = await getDocs(q);
-      const remote = snap.docs.map((d) => ({ id: d.id, ...d.data(), store: "firestore" }));
+      const remote = snap.docs
+        .map((d) => ({ id: d.id, ...d.data(), store: "firestore" }))
+        .sort((a, b) => {
+          const ta = a.createdAt?.toMillis?.() ?? a.createdAt ?? 0;
+          const tb = b.createdAt?.toMillis?.() ?? b.createdAt ?? 0;
+          return tb - ta;
+        });
       // Merge in any local-only projects (saved while offline).
       return [...remote, ...readLocal().map((p) => ({ ...p, store: "local" }))];
     } catch (err) {

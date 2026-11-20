@@ -58,8 +58,12 @@ if (isConfigured) {
       String(env.VITE_APPCHECK_DEBUG || "").toLowerCase() === "true" ||
       import.meta.env.DEV;
     if (!siteKey && debugEnabled) {
+      // Use the pre-registered console debug token when provided, so App Check
+      // attestation succeeds; otherwise the SDK generates one and prints it
+      // to the console for registration.
       // eslint-disable-next-line no-undef
-      self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      self.FIREBASE_APPCHECK_DEBUG_TOKEN =
+        env.VITE_APPCHECK_DEBUG_TOKEN || true;
     }
     initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(siteKey || "debug-placeholder"),

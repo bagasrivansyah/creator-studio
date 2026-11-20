@@ -14,12 +14,14 @@
  *    used for the small on-device-first tasks.
  *  - gemini-3.8-flash — documented stable Flash model, used for the
  *    long-form script and title tasks that need a stronger model.
- * If a named model ever returns 404 (retired/renamed), the call is retried
- * once with the other model before surfacing an error.
+ * If a named model ever returns 404 (retired/renamed), hits quota, or the
+ * model backend fails with a 5xx (e.g. 503 UNAVAILABLE "Deadline expired"),
+ * the call is retried once with the other model before surfacing an error.
  */
 import {
   getGenerativeModel,
   InferenceMode,
+  InferenceSource,
 } from "firebase/ai";
 import { getFirebaseAI, isConfigured } from "./firebase.js";
 import {
@@ -190,9 +192,14 @@ export function parseJsonOutput(rawText) {
   }
 }
 
-function isModelNotFoundError(err) {
+function isRetryableModelError(err) {
   const msg = String(err?.message || err || "");
-  return /404|not found|NOT_FOUND|not supported/i.test(msg);
+  // 404 = model retired/renamed; 429 = per-model quota exhausted; 5xx =
+  // the model backend is unavailable or timed out ("Deadline expired",
+  // UNAVAILABLE). Either way the alternate cloud model is worth one try
+  // before surfacing an error. (Live-tested 21 Nov 2026: gemini-3.8-flash
+  // returned 500/503 UNAVAILABLE while gemini-3.5-flash-lite worked.)
+  return /404|not found|NOT_FOUND|not supported|429|Resource exhausted|500|502|503|504|UNAVAILABLE|Deadline expired|Internal error/i.test(msg);
 }
 
 /**
@@ -250,7 +257,15 @@ export async function runTask(task, brief, opts = {}) {
       const result = await model.generateContent(prompt);
       const latencyMs = Math.round(performance.now() - started);
       const response = result.response;
-      const source = response.inferenceSource || "IN_CLOUD";
+      // The SDK reports inferenceSource as lowercase snake_case
+      // ("in_cloud" / "on_device" — see InferenceSource in the firebase/ai
+      // type definitions). Normalize to the app's canonical uppercase
+      // values so the UI badges, routing log, and stats match reality.
+      // A successful call with no on-device source is a cloud call.
+      const source =
+        response.inferenceSource === InferenceSource.ON_DEVICE
+          ? "ON_DEVICE"
+          : "IN_CLOUD";
       const { data, parseOk, rawText } = parseJsonOutput(response.text());
 
       const modelName =
@@ -277,8 +292,9 @@ export async function runTask(task, brief, opts = {}) {
       };
     } catch (err) {
       lastError = err;
-      // Retry once with the alternate cloud model if the named model 404s.
-      if (modeUsesCloud(mode) && isModelNotFoundError(err) && attempt === 0) {
+      // Retry once with the alternate cloud model if this one is
+      // unavailable (404, quota, or a 5xx from the model backend).
+      if (modeUsesCloud(mode) && isRetryableModelError(err) && attempt === 0) {
         console.warn(
           `[creator-studio] Cloud model ${cloudModel} unavailable, retrying with ${cloudModels[1]}:`,
           err
