@@ -10,10 +10,12 @@
  * "IN_CLOUD") so the UI can show, honestly, where the work actually ran.
  *
  * Cloud model names are pinned to documented stable models:
- *  - gemini-3.5-flash-lite — the documented SDK default fallback (fast, cheap),
- *    used for the small on-device-first tasks.
- *  - gemini-3.8-flash — documented stable Flash model, used for the
- *    long-form script and title tasks that need a stronger model.
+ *  - gemini-3.5-flash-lite — the documented SDK default fallback (fast,
+ *    cheap). It is the PRIMARY cloud model for every task: live testing on
+ *    21 Nov 2026 showed gemini-3.8-flash returning HTTP 500/503 on the
+ *    Gemini Developer API backend, while lite answered in ~1–2s per task.
+ *  - gemini-3.8-flash — documented stable Flash model, kept as the
+ *    one-time fallback if lite ever fails.
  * If a named model ever returns 404 (retired/renamed), hits quota, or the
  * model backend fails with a 5xx (e.g. 503 UNAVAILABLE "Deadline expired"),
  * the call is retried once with the other model before surfacing an error.
@@ -64,7 +66,7 @@ function getCachedModel(cacheKey, buildFn) {
 /**
  * Task definitions. `defaultMode` is the routing the app uses in "Auto":
  * small, private brainstorming goes to Nano first; long-form writing goes
- * straight to the cloud because it needs a larger model.
+ * straight to the cloud by design.
  */
 export const TASKS = {
   hooks: {
@@ -99,29 +101,29 @@ export const TASKS = {
     id: "script",
     label: "Full script",
     defaultMode: InferenceMode.ONLY_IN_CLOUD,
-    cloudModel: CLOUD_MODEL_STRONG,
+    cloudModel: CLOUD_MODEL_FAST,
     schema: scriptSchema,
     buildPrompt: (brief, ctx) => buildScriptPrompt(brief, ctx?.selectedHook),
     whyOnDevice:
       "On-device-first mode is on — Nano wrote the full script locally.",
     whyCloud:
-      "Long-form structure and reasoning need a larger cloud model.",
+      "Long-form structure and reasoning run in the cloud by design.",
     whyCloudForced:
-      "Long-form structure and reasoning need a larger cloud model.",
+      "Long-form structure and reasoning run in the cloud by design.",
   },
   titles: {
     id: "titles",
     label: "Titles & thumbnail text",
     defaultMode: InferenceMode.ONLY_IN_CLOUD,
-    cloudModel: CLOUD_MODEL_STRONG,
+    cloudModel: CLOUD_MODEL_FAST,
     schema: titlesSchema,
     buildPrompt: (brief) => buildTitlesPrompt(brief),
     whyOnDevice:
       "On-device-first mode is on — Nano wrote the titles locally.",
     whyCloud:
-      "Nuanced wording and keyword craft benefit from a larger cloud model.",
+      "Nuanced wording and keyword craft run in the cloud by design.",
     whyCloudForced:
-      "Cloud-only mode is on, so the cloud model handled it.",
+      "This task runs in the cloud by design.",
   },
 };
 

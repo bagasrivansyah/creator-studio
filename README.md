@@ -15,14 +15,19 @@ logged with where it actually ran, read from `inferenceSource` — never guessed
 |---|---|---|
 | Hooks (5 options) | On-device first (`PREFER_ON_DEVICE`) | Short, private, latency-sensitive. Free, instant, works offline. |
 | Caption + hashtags | On-device first (`PREFER_ON_DEVICE`) | Same: short text the creator may not want leaving the device. |
-| Full 5-scene script | Cloud (`ONLY_IN_CLOUD`, Gemini 3.8 Flash) | Long-form structure and reasoning need a larger model. |
-| Titles + thumbnail text | Cloud (`ONLY_IN_CLOUD`, Gemini 3.8 Flash) | Nuanced wording and keyword craft benefit from a larger model. |
+| Full 5-scene script | Cloud (`ONLY_IN_CLOUD`, gemini-3.5-flash-lite) | Long-form structure and reasoning run in the cloud by design. |
+| Titles + thumbnail text | Cloud (`ONLY_IN_CLOUD`, gemini-3.5-flash-lite) | Nuanced wording and keyword craft run in the cloud by design. |
 
 If Gemini Nano isn't available on a browser, the on-device tasks fall back to
 the cloud automatically (`gemini-3.5-flash-lite`), so the app works for 100%
 of visitors. A routing switch lets the user force **Auto**, **On-device
 first**, or **Cloud only**, and the routing panel shows the real outcome of
 every call: task, model, latency, and the reason for the route.
+
+`gemini-3.5-flash-lite` is the primary cloud model for every task, because
+live testing on 21 Nov 2026 showed `gemini-3.8-flash` returning HTTP 500/503
+on the Gemini Developer API backend, while lite answered in ~1–2s per task.
+`gemini-3.8-flash` is kept as a one-time fallback if lite ever fails.
 
 ## Features
 
@@ -57,12 +62,12 @@ every call: task, model, latency, and the reason for the route.
 │        DEVICE      DEVICE      CLOUD      CLOUD              │
 │              │          │            │           │           │
 │              ▼          ▼            ▼           ▼           │
-│        Gemini Nano  Gemini Nano  Gemini 3.8  Gemini 3.8      │
-│        (Chrome)     (Chrome)     Flash      Flash            │
+│        Gemini Nano  Gemini Nano  gemini-3.5- gemini-3.5-     │
+│        (Chrome)     (Chrome)     flash-lite flash-lite       │
 │              │          │            │           │           │
 │              └────┬─────┘            └─────┬─────┘           │
 │                   ▼  fallback              ▼                 │
-│           gemini-3.5-flash-lite   (cloud only)               │
+│           gemini-3.5-flash-lite   fallback: gemini-3.8-flash │
 │                                                              │
 │  Every response reports response.inferenceSource ──► routing │
 │  panel (task, model, latency, reason).                       │
@@ -163,15 +168,22 @@ Requirements: **Chrome 139+ on desktop**.
   `getGenerativeModel` with `InferenceMode`, `inCloudParams` /
   `onDeviceParams`, `initializeDeviceModel`, `response.inferenceSource`, and
   the `Schema` helpers.
-- Cloud model names are documented stable models (`gemini-3.8-flash`,
-  `gemini-3.5-flash-lite` — the documented SDK default fallback), with a
-  one-time retry on the alternate model if a name ever 404s.
+- Cloud model names are documented stable models (`gemini-3.5-flash-lite`
+  primary, `gemini-3.8-flash` fallback), with a one-time retry on the
+  alternate model if a name ever 404s or the backend returns a 5xx. Live
+  testing on 21 Nov 2026 showed `gemini-3.8-flash` returning HTTP 500/503
+  on the Gemini Developer API backend, so lite is the primary cloud model.
+
+- Live cloud generation verified end-to-end against a real Firebase
+  project (Playwright/Firefox, 21 Nov 2026): all 4 tasks succeed in the
+  cloud with real, on-topic content; the routing log shows `IN_CLOUD` with
+  real latencies (avg ~1.7s per task, 8.3s for the full package); zero
+  console errors and zero failed requests.
 
 ### Not verified (needs a real Firebase project + Chrome)
 
 - The on-device Gemini Nano path end-to-end (needs Chrome 139+ with the model
   downloaded — not available in this build environment).
-- Live cloud generation (needs a real Firebase project config).
 - Firestore save/load against a live database (rules are included and the
   localStorage fallback is exercised in demo mode).
 
