@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creator Studio — Hybrid AI for Short-Form Creators</title>
+    <meta
+      name="description"
+      content="Creator Studio: an AI assistant for short-form video creators. Hooks and captions run on-device with Gemini Nano; full scripts run in the cloud with Gemini — one hybrid app built with Firebase AI Logic."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">✦</div>
+        <div>
+          <h1>Creator Studio</h1>
+          <p class="brand-sub">Hybrid AI for short-form creators · #BuildHybridAI 2026</p>
+        </div>
+      </div>
+      <div class="status-pills">
+        <span class="pill" id="pill-nano" title="On-device model status">Nano: checking…</span>
+        <span class="pill" id="pill-net" title="Network status">Online</span>
+        <span class="pill" id="pill-firebase" title="Firebase status">Firebase: checking…</span>
+      </div>
+    </header>
+
+    <div class="demo-banner" id="demo-banner" hidden>
+      <strong>Demo mode.</strong> No Firebase config was found, so this page shows
+      clearly-labelled sample output. Add your Firebase web config (see README)
+      to generate live with Gemini Nano on-device and Gemini in the cloud.
+    </div>
+
+    <main class="layout">
+      <!-- Brief -->
+      <section class="panel brief-panel" aria-label="Video brief">
+        <h2>Your video brief</h2>
+        <p class="panel-hint">
+          Describe the video you want to make. Hooks and captions are drafted
+          on your device; the full script is written in the cloud.
+        </p>
+
+        <label class="field">
+          <span class="field-label">Topic</span>
+          <textarea
+            id="input-topic"
+            rows="3"
+            placeholder="e.g. A leader who carried a sack of flour on his own back at night"
+          ></textarea>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Niche</span>
+            <select id="input-niche">
+              <option>Islamic stories</option>
+              <option>Motivation</option>
+              <option>Finance &amp; trading</option>
+              <option>Cooking</option>
+              <option>Tech &amp; AI</option>
+              <option>Travel</option>
+              <option>Comedy</option>
+              <option>Education</option>
+              <option>Business</option>
+              <option>Lifestyle</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Angle</span>
+            <select id="input-angle">
+              <option>Story / parable</option>
+              <option>Curiosity hook</option>
+              <option>Listicle</option>
+              <option>Myth-busting</option>
+              <option>How-to</option>
+              <option>Emotional</option>
+              <option>Before / after</option>
+              <option>Challenge</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Output language</span>
+            <select id="input-language">
+              <option value="en">English</option>
+              <option value="id">Bahasa Indonesia</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Target length</span>
+            <select id="input-duration">
+              <option value="15">15 seconds</option>
+              <option value="30" selected>30 seconds</option>
+              <option value="60">60 seconds</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset class="routing-switch">
+          <legend>Hybrid routing</legend>
+          <div class="segmented" role="radiogroup" aria-label="Routing mode">
+            <label>
+              <input type="radio" name="routing" value="auto" checked />
+              <span>Auto</span>
+            </label>
+            <label>
+              <input type="radio" name="routing" value="prefer_on_device" />
+              <span>On-device first</span>
+            </label>
+            <label>
+              <input type="radio" name="routing" value="cloud_only" />
+              <span>Cloud only</span>
+            </label>
+          </div>
+          <p class="routing-explain" id="routing-explain">
+            Auto: quick tasks run on-device with Gemini Nano; the full script
+            and titles run in the cloud with Gemini.
+          </p>
+        </fieldset>
+
+        <div class="nano-progress" id="nano-progress" hidden>
+          <span id="nano-progress-label">Preparing on-device model…</span>
+          <div class="progress-track">
+            <div class="progress-bar" id="nano-progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="btn-generate-all">
+          Generate full package
+        </button>
+        <div class="task-buttons">
+          <button class="btn btn-ghost" data-task="hooks">Hooks</button>
+          <button class="btn btn-ghost" data-task="caption">Caption</button>
+          <button class="btn btn-ghost" data-task="script">Script</button>
+          <button class="btn btn-ghost" data-task="titles">Titles</button>
+        </div>
+        <p class="panel-hint small">
+          First on-device run downloads Gemini Nano once (Chrome 139+ on
+          desktop). After that, hooks and captions work even offline.
+        </p>
+      </section>
+
+      <!-- Results -->
+      <section class="panel results-panel" aria-label="Results">
+        <div class="tabs" role="tablist" aria-label="Result types">
+          <button class="tab active" role="tab" data-tab="hooks" aria-selected="true">Hooks</button>
+          <button class="tab" role="tab" data-tab="caption" aria-selected="false">Caption</button>
+          <button class="tab" role="tab" data-tab="script" aria-selected="false">Script</button>
+          <button class="tab" role="tab" data-tab="titles" aria-selected="false">Titles</button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="panel-hooks" role="tabpanel">
+            <div class="result-meta" id="meta-hooks"></div>
+            <div class="result-body" id="result-hooks">
+              <div class="empty-state">
+                <p class="empty-title">No hooks yet</p>
+                <p>Enter a topic and generate — 5 scroll-stopping openers, drafted on your device.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-panel" id="panel-caption" role="tabpanel">
+            <div class="result-meta" id="meta-caption"></div>
+            <div class="result-body" id="result-caption">
+              <div class="empty-state">
+                <p class="empty-title">No caption yet</p>
+                <p>A warm caption, hashtags, and a call to action — also drafted on-device.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-panel" id="panel-script" role="tabpanel">
+            <div class="result-meta" id="meta-script"></div>
+            <div class="result-body" id="result-script">
+              <div class="empty-state">
+                <p class="empty-title">No script yet</p>
+                <p>A complete 5-scene script with voiceover and on-screen text cues, written in the cloud.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-panel" id="panel-titles" role="tabpanel">
+            <div class="result-meta" id="meta-titles"></div>
+            <div class="result-body" id="result-titles">
+              <div class="empty-state">
+                <p class="empty-title">No titles yet</p>
+                <p>Four titles and four thumbnail texts, crafted in the cloud.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn btn-secondary" id="btn-copy-all">Copy everything</button>
+          <button class="btn btn-secondary" id="btn-save-project">Save project</button>
+        </div>
+      </section>
+
+      <!-- Routing log -->
+      <aside class="panel routing-panel" aria-label="Hybrid routing log">
+        <h2>Hybrid routing</h2>
+        <p class="panel-hint">
+          Every generation is logged with where it actually ran — read from
+          <code>inferenceSource</code>, not guessed.
+        </p>
+        <div class="routing-stats">
+          <div class="stat"><span class="stat-num" id="stat-device">0</span><span class="stat-label">on-device</span></div>
+          <div class="stat"><span class="stat-num" id="stat-cloud">0</span><span class="stat-label">in cloud</span></div>
+          <div class="stat"><span class="stat-num" id="stat-avg">–</span><span class="stat-label">avg latency</span></div>
+        </div>
+        <ol class="routing-log" id="routing-log">
+          <li class="log-empty">Nothing generated yet. Run a task to see its route here.</li>
+        </ol>
+        <details class="routing-details">
+          <summary>Why split the work this way?</summary>
+          <ul>
+            <li><strong>On-device (Gemini Nano):</strong> hooks and captions are short, private, and latency-sensitive. Running them locally is free, instant, and works offline — and the creator's ideas never leave the device.</li>
+            <li><strong>In cloud (Gemini):</strong> a full 5-scene script needs long-form structure and reasoning, which needs a larger model.</li>
+            <li><strong>Fallback:</strong> if Nano isn't available on a browser, the same prompts fall back to the cloud automatically — the app works for 100% of visitors.</li>
+          </ul>
+        </details>
+      </aside>
+    </main>
+
+    <!-- Saved projects -->
+    <section class="panel saved-panel">
+      <div class="saved-head">
+        <h2>Saved projects</h2>
+        <button class="btn btn-ghost btn-small" id="btn-refresh-saved">Refresh</button>
+      </div>
+      <p class="panel-hint" id="saved-hint">Projects save to Firestore (anonymous sign-in) or to this browser when offline.</p>
+      <div class="saved-list" id="saved-list">
+        <p class="empty-state small">No saved projects yet.</p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="panel how-panel">
+      <h2>How the hybrid works</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-icon" aria-hidden="true">◆</div>
+          <h3>1 · On-device first</h3>
+          <p>
+            Hooks and captions use <code>PREFER_ON_DEVICE</code>. When Chrome's
+            Gemini Nano is available, the draft never leaves the device —
+            private, free, and fast enough to feel instant.
+          </p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon" aria-hidden="true">⬢</div>
+          <h3>2 · Cloud for depth</h3>
+          <p>
+            The full script and titles use <code>ONLY_IN_CLOUD</code> with a
+            larger Gemini model, because long-form structure needs more
+            reasoning than a small on-device model can offer.
+          </p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon" aria-hidden="true">⟡</div>
+          <h3>3 · Honest routing</h3>
+          <p>
+            Every response reports its real <code>inferenceSource</code>. The
+            routing panel shows where each task ran, how long it took, and why
+            — no marketing, just the telemetry.
+          </p>
+        </div>
+      </div>
+      <p class="how-note">
+        Built with Firebase AI Logic (JS SDK v13), App Check, anonymous Auth,
+        and Firestore. Source code is open under the Apache 2.0 license.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>
+        Creator Studio · Entry for
+        <a href="https://firebasehybridaihackathon.devpost.com/">#BuildHybridAI 2026</a>
+        · Built by Bagas Rivansyah
+      </p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
