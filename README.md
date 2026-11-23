@@ -91,6 +91,9 @@ on the Gemini Developer API backend, while lite answered in ~1–2s per task.
 │   └── styles.css        # Dark creator-studio theme
 ├── firestore.rules       # Per-user project access rules
 ├── firebase.json         # Firebase Hosting config
+├── tests/
+│   ├── live-cloud-checks.py         # 36-check live suite (Playwright/Firefox)
+│   └── live-cloud-checks-report.json # Latest run result (36/36, 24 Nov 2026)
 ├── .env.example          # Required config (copy to .env)
 └── LICENSE               # Apache 2.0
 ```
@@ -188,6 +191,31 @@ Requirements: **Chrome 139+ on desktop**.
 
 - The on-device Gemini Nano path end-to-end (needs Chrome 139+ with the model
   downloaded — not available in this build environment).
+
+## Live cloud tests
+
+`tests/live-cloud-checks.py` is a 36-check Playwright/Firefox suite that runs
+against the live hosted demo — no local Firebase config needed. It covers:
+page load in configured mode, full-package generation of all 4 tasks, routing
+honesty (real `inferenceSource`, latencies, model names), content completeness
+(5 hooks, caption + hashtags, 5 scenes, 4 titles + 4 thumbnail texts), and the
+Firestore save/reload/load round-trip.
+
+```bash
+pip install playwright
+playwright install firefox
+python3 tests/live-cloud-checks.py   # writes tests/live-cloud-checks-report.json
+```
+
+Results: the first live run (21 Nov 2026) passed 35/36 — the one failure was a
+case-sensitivity bug in the test script's own assertion (the badges read
+"Cloud · Gemini" / "In cloud" in the DOM, but CSS uppercases them visually),
+not an app bug. The suite was rebuilt with case-insensitive assertions and
+re-ran **36/36 on 24 Nov 2026** (report in
+`tests/live-cloud-checks-report.json`). Note: the Gemini backend occasionally
+returns HTTP 500 ("high demand") or 429 during demand spikes; the app retries
+across models and surfaces an honest error, and the suite retries the package
+once before failing.
 
 ## License
 

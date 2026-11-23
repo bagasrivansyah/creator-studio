@@ -1,0 +1,295 @@
+{
+  "url": "https://creator-studio-hybridai.web.app/",
+  "started_at": "2026-11-23T20:27:15Z",
+  "console_errors": [],
+  "console_warnings": [
+    "[creator-studio] Cloud model gemini-3.5-flash-lite unavailable, retrying with gemini-3.8-flash: Error",
+    "[creator-studio] Cloud model gemini-3.5-flash-lite unavailable, retrying with gemini-3.8-flash: Error"
+  ],
+  "page_errors": [],
+  "failed_requests": [
+    "500 https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3.5-flash-lite:generateContent",
+    "429 https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3.8-flash:generateContent",
+    "500 https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3.5-flash-lite:generateContent",
+    "429 https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3.8-flash:generateContent"
+  ],
+  "evidence": {
+    "load_ms": 4806,
+    "title": "Creator Studio — Hybrid AI for Short-Form Creators",
+    "pill_firebase": "Firebase: live",
+    "pill_nano": "Nano: unsupported",
+    "pill_net": "Online",
+    "demo_banner_visible": false,
+    "gen_attempt_1_entries": [
+      "Titles & thumbnail text | ERROR | AI: Error fetching from https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3. | The request failed. Check the connection and the Firebase setup, then try again. | 8:27:37 PM",
+      "Full script | ERROR | AI: Error fetching from https://firebasevertexai.googleapis.com/v1beta/projects/creator-studio-hybridai/models/gemini-3. | The request failed. Check the connection and the Firebase setup, then try again. | 8:27:28 PM",
+      "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 1546 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:26 PM",
+      "Hooks | IN CLOUD | gemini-3.5-flash-lite · 2165 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:24 PM"
+    ],
+    "gen_attempt_2_entries": [
+      "Titles & thumbnail text | IN CLOUD | gemini-3.5-flash-lite · 1147 ms | This task runs in the cloud by design. | 8:28:12 PM",
+      "Full script | IN CLOUD | gemini-3.5-flash-lite · 7290 ms | Long-form structure and reasoning run in the cloud by design. | 8:28:05 PM",
+      "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 14005 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:51 PM",
+      "Hooks | IN CLOUD | gemini-3.5-flash-lite · 1464 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:49 PM"
+    ],
+    "gen_attempts": 2,
+    "gen_total_ms": 50927,
+    "routing_entries_newest_run": [
+      "Titles & thumbnail text | IN CLOUD | gemini-3.5-flash-lite · 1147 ms | This task runs in the cloud by design. | 8:28:12 PM",
+      "Full script | IN CLOUD | gemini-3.5-flash-lite · 7290 ms | Long-form structure and reasoning run in the cloud by design. | 8:28:05 PM",
+      "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 14005 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:51 PM",
+      "Hooks | IN CLOUD | gemini-3.5-flash-lite · 1464 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:49 PM"
+    ],
+    "stat_cloud": "6",
+    "stat_device": "0",
+    "stat_avg": "4603 ms",
+    "hooks_count": 5,
+    "hooks_meta": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    1464 ms\n    \n  ",
+    "caption_len": 357,
+    "hashtag_count": 8,
+    "caption_meta": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    14005 ms\n    \n  ",
+    "scene_count": 5,
+    "script_meta": "CLOUD · GEMINI\ngemini-3.5-flash-lite\n7290 ms",
+    "title_count": 4,
+    "thumb_count": 4,
+    "titles_meta": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    1147 ms\n    \n  ",
+    "hooks_preview": "\n    \n      01\n      The ruler of the faithful carried this heavy sack alone at night.\n      story\n    \n    \n      02\n      Why was the leader of the empire crying over a hungry child?\n      question\n    \n    \n      03\n      Most kings sit on thrones, but he carried flour on his back.\n      contrast",
+    "caption_preview": "\n    True leadership isn't about sitting at the top; it is about carrying the heavy burdens of your people yourself. Omar ibn al-Khattab showed us what humility really looks like.\n    #islamicstories#islamichistory#truesleadership#muslimhistory#prophetstories#islamicreminders#humility#sahabah\n    Ca",
+    "screenshot_path": "./live-cloud-checks.png",
+    "screenshot_error": "",
+    "save_toast": "Project saved to Firestore.",
+    "saved_list_before_reload": "A leader who carried a sack of flour\n\nIslamic stories · Story / parable · 30s\n\nhooks · caption · script · titles · Firestore · 11/23/2026, 8:28:16 PM\n\nLoad\nDelete",
+    "saved_list_after_reload": "A leader who carried a sack of flour\n\nIslamic stories · Story / parable · 30s\n\nhooks · caption · script · titles · Firestore · 11/23/2026, 8:28:16 PM\n\nLoad\nDelete"
+  },
+  "checks": [
+    {
+      "key": "01_load_title",
+      "label": "Page title names Creator Studio",
+      "result": "PASS",
+      "evidence": "Creator Studio — Hybrid AI for Short-Form Creators"
+    },
+    {
+      "key": "02_load_firebase_live",
+      "label": "Firebase pill reads 'Firebase: live'",
+      "result": "PASS",
+      "evidence": "Firebase: live"
+    },
+    {
+      "key": "03_load_no_demo_banner",
+      "label": "Demo banner is hidden (configured mode)",
+      "result": "PASS"
+    },
+    {
+      "key": "04_load_no_console_errors",
+      "label": "No console errors on load",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "key": "05_load_no_page_errors",
+      "label": "No page errors on load",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "key": "06_load_no_failed_requests",
+      "label": "No failed requests (HTTP >= 400)",
+      "result": "PASS",
+      "evidence": []
+    },
+    {
+      "key": "07_load_pills_settled",
+      "label": "Status pills settled (no 'checking')",
+      "result": "PASS"
+    },
+    {
+      "key": "08_gen_hooks_entry",
+      "label": "Hooks task logged in routing panel",
+      "result": "PASS",
+      "evidence": "Hooks | IN CLOUD | gemini-3.5-flash-lite · 1464 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:49 PM"
+    },
+    {
+      "key": "09_gen_caption_entry",
+      "label": "Caption task logged in routing panel",
+      "result": "PASS",
+      "evidence": "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 14005 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:51 PM"
+    },
+    {
+      "key": "10_gen_script_entry",
+      "label": "Script task logged in routing panel",
+      "result": "PASS",
+      "evidence": "Full script | IN CLOUD | gemini-3.5-flash-lite · 7290 ms | Long-form structure and reasoning run in the cloud by design. | 8:28:05 PM"
+    },
+    {
+      "key": "11_gen_titles_entry",
+      "label": "Titles task logged in routing panel",
+      "result": "PASS",
+      "evidence": "Titles & thumbnail text | IN CLOUD | gemini-3.5-flash-lite · 1147 ms | This task runs in the cloud by design. | 8:28:12 PM"
+    },
+    {
+      "key": "12_route_all_in_cloud",
+      "label": "All 4 newest entries show the 'in cloud' badge (case-insensitive)",
+      "result": "PASS",
+      "evidence": [
+        "Titles & thumbnail text | IN CLOUD | gemini-3.5-flash-lite · 1147 ms | This task runs in the cloud by design. | 8:28:12 PM",
+        "Full script | IN CLOUD | gemini-3.5-flash-lite · 7290 ms | Long-form structure and reasoning run in the cloud by design. | 8:28:05 PM",
+        "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 14005 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:51 PM",
+        "Hooks | IN CLOUD | gemini-3.5-flash-lite · 1464 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:49 PM"
+      ]
+    },
+    {
+      "key": "13_route_no_error_badge",
+      "label": "No 'Error' badge in the newest 4 entries",
+      "result": "PASS"
+    },
+    {
+      "key": "14_route_real_latencies",
+      "label": "All 4 entries show a real latency (> 0 ms)",
+      "result": "PASS",
+      "evidence": [
+        1464,
+        14005,
+        7290,
+        1147
+      ]
+    },
+    {
+      "key": "15_route_gemini_models",
+      "label": "All 4 entries name a Gemini model",
+      "result": "PASS",
+      "evidence": [
+        "Titles & thumbnail text | IN CLOUD | gemini-3.5-flash-lite · 1147 ms | This task runs in the cloud by design. | 8:28:12 PM",
+        "Full script | IN CLOUD | gemini-3.5-flash-lite · 7290 ms | Long-form structure and reasoning run in the cloud by design. | 8:28:05 PM",
+        "Caption & hashtags | IN CLOUD | gemini-3.5-flash-lite · 14005 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:51 PM",
+        "Hooks | IN CLOUD | gemini-3.5-flash-lite · 1464 ms | Nano isn't available in this browser, so the cloud model handled it. | 8:27:49 PM"
+      ]
+    },
+    {
+      "key": "16_route_stat_cloud_4",
+      "label": "Stats panel counts at least 4 in-cloud runs",
+      "result": "PASS",
+      "evidence": "6"
+    },
+    {
+      "key": "17_route_stat_avg_real",
+      "label": "Stats panel shows a real average latency",
+      "result": "PASS",
+      "evidence": "4603 ms"
+    },
+    {
+      "key": "18_content_hooks_5",
+      "label": "Hooks: 5 hook items rendered",
+      "result": "PASS",
+      "evidence": 5
+    },
+    {
+      "key": "19_content_hooks_not_sample",
+      "label": "Hooks meta has no 'Sample output'",
+      "result": "PASS",
+      "evidence": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    1464 ms\n    \n  "
+    },
+    {
+      "key": "20_content_caption_text",
+      "label": "Caption: text longer than 100 chars",
+      "result": "PASS",
+      "evidence": 357
+    },
+    {
+      "key": "21_content_caption_hashtags",
+      "label": "Caption: at least 5 hashtags",
+      "result": "PASS",
+      "evidence": 8
+    },
+    {
+      "key": "22_content_caption_not_sample",
+      "label": "Caption meta has no 'Sample output'",
+      "result": "PASS",
+      "evidence": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    14005 ms\n    \n  "
+    },
+    {
+      "key": "23_content_script_5_scenes",
+      "label": "Script: 5 scenes rendered",
+      "result": "PASS",
+      "evidence": 5
+    },
+    {
+      "key": "24_content_script_not_sample",
+      "label": "Script meta has no 'Sample output'",
+      "result": "PASS",
+      "evidence": "CLOUD · GEMINI\ngemini-3.5-flash-lite\n7290 ms"
+    },
+    {
+      "key": "25_content_titles_4",
+      "label": "Titles: 4 titles rendered",
+      "result": "PASS",
+      "evidence": 4
+    },
+    {
+      "key": "26_content_thumbs_4",
+      "label": "Titles: 4 thumbnail texts rendered",
+      "result": "PASS",
+      "evidence": 4
+    },
+    {
+      "key": "27_content_titles_not_sample",
+      "label": "Titles meta has no 'Sample output'",
+      "result": "PASS",
+      "evidence": "\n    Cloud · Gemini\n    gemini-3.5-flash-lite\n    1147 ms\n    \n  "
+    },
+    {
+      "key": "28_topic_hooks",
+      "label": "Hooks mention the topic (flour/leader/sack/carried)",
+      "result": "PASS"
+    },
+    {
+      "key": "29_topic_script",
+      "label": "Script mentions the topic (flour/leader/sack/carried)",
+      "result": "PASS"
+    },
+    {
+      "key": "30_save_toast_firestore",
+      "label": "Save toast says 'saved to Firestore'",
+      "result": "PASS",
+      "evidence": "Project saved to Firestore."
+    },
+    {
+      "key": "31_save_list_before_reload",
+      "label": "Saved list shows the project before reload",
+      "result": "PASS",
+      "evidence": "A leader who carried a sack of flour\n\nIslamic stories · Story / parable · 30s\n\nhooks · caption · script · titles · Firestore · 11/23/2026, 8:28:16 PM\n\nLoad\nDelete"
+    },
+    {
+      "key": "32_save_persists_reload",
+      "label": "Saved project still listed after reload",
+      "result": "PASS",
+      "evidence": "A leader who carried a sack of flour\n\nIslamic stories · Story / parable · 30s\n\nhooks · caption · script · titles · Firestore · 11/23/2026, 8:28:16 PM\n\nLoad\nDelete"
+    },
+    {
+      "key": "33_save_store_firestore",
+      "label": "Saved card is stored in Firestore",
+      "result": "PASS",
+      "evidence": "A leader who carried a sack of flour\n\nIslamic stories · Story / parable · 30s\n\nhooks · caption · script · titles · Firestore · 11/23/2026, 8:28:16 PM\n\nLoad\nDelete"
+    },
+    {
+      "key": "34_save_load_restores",
+      "label": "Load restores the project (5 hooks visible)",
+      "result": "PASS"
+    },
+    {
+      "key": "35_ui_routing_switch",
+      "label": "Routing switch offers 3 options",
+      "result": "PASS",
+      "evidence": 3
+    },
+    {
+      "key": "36_ui_screenshot",
+      "label": "Screenshot captured with results visible",
+      "result": "PASS",
+      "evidence": ""
+    }
+  ],
+  "passed": 36,
+  "total": 36,
+  "all_pass": true,
+  "finished_at": "2026-11-23T20:28:27Z"
+}
